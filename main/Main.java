@@ -20,14 +20,13 @@ public class Main {
         // Obtener el pedido actual
         Pedido pedido = servicioFacade.getPedido();
 
-        // Obtener el primer servicio de impresión
-        Impresion impresion = (Impresion) pedido.getServicios().get(0);
 
         // Mostrar detalles del servicio de impresión
         System.out.println("=== Servicio de Impresión ===");
-        System.out.println("Color: " + impresion.getColor());
-        System.out.println("Cantidad de imágenes: " + impresion.getImagenes().size());
-        System.out.println("Costo total: " + impresion.calcularCosto());
+System.out.println("Color: " + ((Impresion) pedido.getServicios().get(0)).getColor());
+System.out.println("Cantidad de imágenes: " + ((Impresion) pedido.getServicios().get(0)).getImagenes().size());
+System.out.println("Costo total: " + ((Impresion) pedido.getServicios().get(0)).calcularCosto());
+
 
         // Obtener el primer servicio de fotografía
         Fotografia fotografia = (Fotografia) pedido.getServicios().get(1);
