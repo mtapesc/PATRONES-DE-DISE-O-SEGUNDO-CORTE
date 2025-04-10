@@ -1,97 +1,102 @@
-@startuml UML.puml
-left to right direction
+@startuml UML
 
-package "Models" #LightBlue {
-    class Cliente {
-        - cedula: String
-        - nombre: String
-        + realizarPedido(servicios: List<Servicio>): Pedido
-    }
-
-    class Pedido {
-        - cliente: Cliente
-        - servicios: List<Servicio>
-        + calcularTotal(): double
-        + agregarServicio(servicio: Servicio): void
-    }
-
+' Paquete principal
+package "models" {
     abstract class Servicio {
-        - numero: int
-        + calcularCosto(): double
+        - int numero
+        + abstract double calcularCosto()
     }
 
     class Impresion extends Servicio {
-        - color: String
-        - imagenes: List<Imagen>
-        + agregarImagen(imagen: Imagen): void
+        - String color
+        - List<Imagen> imagenes
+        - CostoStrategy costoStrategy
+        + void agregarImagen(Imagen imagen)
+        + double calcularCosto()
+        + void setColor(String color)
+        + String getColor()
+        + void setCostoStrategy(CostoStrategy costoStrategy)
     }
 
     class Fotografia extends Servicio {
-        - tipoFotografia: String
-        - cantidadFotos: int
+        - String tipoFotografia
+        - int cantidadFotos
+        - CostoStrategy costoStrategy
+        + double calcularCosto()
+        + void setTipoFotografia(String tipoFotografia)
+        + String getTipoFotografia()
+        + void setCostoStrategy(CostoStrategy costoStrategy)
+    }
+
+    class Pedido {
+        - Cliente cliente
+        - List<Servicio> servicios
+        + void agregarServicio(Servicio servicio)
+        + double calcularTotal()
+        + List<Servicio> getServicios()
+    }
+
+    class Cliente {
+        - String cedula
+        - String nombre
+        + String getCedula()
+        + String getNombre()
     }
 
     class Imagen {
-        - fichero: String
-        + print(): void
+        - String nombre
+        + String getNombre()
     }
 }
 
-package "Factory" #LightGreen {
-    abstract class ServicioFactory {
-        + crearServicio(): Servicio
-    }
-
-    class ImpresionFactory extends ServicioFactory {
-        + crearServicio(): Servicio
-    }
-
-    class FotografiaFactory extends ServicioFactory {
-        + crearServicio(): Servicio
-    }
-}
-
-package "Strategy" #LightYellow {
+' Paquete de patrones de diseño
+package "patterns.strategy" {
     interface CostoStrategy {
-        + calcularCosto(): double
+        + double calcularCosto()
     }
 
     class CostoImpresionStrategy implements CostoStrategy {
-        + calcularCosto(): double
+        + double calcularCosto()
     }
 
     class CostoFotografiaStrategy implements CostoStrategy {
-        + calcularCosto(): double
+        + double calcularCosto()
     }
 }
 
-package "Decorator" #LightPink {
-    abstract class ServicioDecorator extends Servicio {
-        - servicio: Servicio
-        + calcularCosto(): double
+package "patterns.factory" {
+    class ImpresionFactory {
+        + Impresion crearImpresion()
     }
 
-    class DescuentoDecorator extends ServicioDecorator {
-        - descuento: double
-        + calcularCosto(): double
-    }
-
-    class CostoExtraDecorator extends ServicioDecorator {
-        - costoExtra: double
-        + calcularCosto(): double
+    class FotografiaFactory {
+        + Fotografia crearFotografia()
     }
 }
 
-Cliente "1" --> "1" Pedido
-Pedido "1" --> "*" Servicio
+package "patterns.facade" {
+    class ServicioFacade {
+        - Pedido pedido
+        + ServicioFacade(Cliente cliente)
+        + void agregarImpresion(String color, String... imagenes)
+        + void agregarFotografia(String tipoFotografia, int cantidadFotos)
+        + double calcularCostoTotal()
+        + Pedido getPedido()
+    }
+}
+
+' Relaciones
 Servicio <|-- Impresion
 Servicio <|-- Fotografia
-Impresion "1" --> "*" Imagen
-ServicioFactory <|-- ImpresionFactory
-ServicioFactory <|-- FotografiaFactory
+Pedido --> Cliente
+Pedido --> Servicio
+Impresion --> Imagen
+Impresion --> CostoStrategy
+Fotografia --> CostoStrategy
 CostoStrategy <|.. CostoImpresionStrategy
 CostoStrategy <|.. CostoFotografiaStrategy
-ServicioDecorator <|-- DescuentoDecorator
-ServicioDecorator <|-- CostoExtraDecorator
+ServicioFacade --> Pedido
+ServicioFacade --> ImpresionFactory
+ServicioFacade --> FotografiaFactory
 
 @enduml
