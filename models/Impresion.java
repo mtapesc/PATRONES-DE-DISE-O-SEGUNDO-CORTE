@@ -1,13 +1,11 @@
 package models;
 
-import patterns.strategy.CostoStrategy; // Importamos la interfaz para definir cómo se calcula el costo
+import patterns.strategy.CostoStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
 // La clase Impresion representa un servicio de impresión
-// Hereda de la clase abstracta Servicio
 public class Impresion extends Servicio {
-    // Atributos privados específicos del servicio de impresión
     private String color; // Indica si la impresión es a color o en blanco y negro
     private List<Imagen> imagenes = new ArrayList<>(); // Lista de imágenes que se van a imprimir
     private CostoStrategy costoStrategy; // Estrategia para calcular el costo del servicio
@@ -31,17 +29,14 @@ public class Impresion extends Servicio {
 
     // Métodos "getter" y "setter" para acceder y modificar los atributos privados
 
-    // Devuelve si la impresión es a color o en blanco y negro
     public String getColor() {
         return color;
     }
 
-    // Permite establecer si la impresión es a color o en blanco y negro
     public void setColor(String color) {
         this.color = color;
     }
 
-    // Devuelve la lista de imágenes que se van a imprimir
     public List<Imagen> getImagenes() {
         return imagenes;
     }

@@ -1,13 +1,10 @@
 package models;
 
-// Importamos la interfaz CostoStrategy para definir cómo se calcula el costo
 import patterns.strategy.CostoStrategy;
 
 // La clase Fotografia representa un servicio de fotografía
-// Hereda de la clase abstracta Servicio
 public class Fotografia extends Servicio {
-    // Atributos privados específicos del servicio de fotografía
-    private String tipoFotografia; // Tipo de fotografía (por ejemplo, arte, etc.)
+    private String tipoFotografia; // Tipo de fotografía (por ejemplo, retrato, paisaje, etc.)
     private int cantidadFotos; // Cantidad de fotos solicitadas
     private CostoStrategy costoStrategy; // Estrategia para calcular el costo del servicio
 
@@ -25,22 +22,18 @@ public class Fotografia extends Servicio {
 
     // Métodos "getter" y "setter" para acceder y modificar los atributos privados
 
-    // Devuelve el tipo de fotografía
     public String getTipoFotografia() {
         return tipoFotografia;
     }
 
-    // Permite establecer el tipo de fotografía
     public void setTipoFotografia(String tipoFotografia) {
         this.tipoFotografia = tipoFotografia;
     }
 
-    // Devuelve la cantidad de fotos solicitadas
     public int getCantidadFotos() {
         return cantidadFotos;
     }
 
-    // Permite establecer la cantidad de fotos solicitadas
     public void setCantidadFotos(int cantidadFotos) {
         this.cantidadFotos = cantidadFotos;
     }
