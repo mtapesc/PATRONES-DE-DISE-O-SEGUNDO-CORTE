@@ -1,0 +1,97 @@
+@startuml UML.puml
+left to right direction
+
+package "Models" #LightBlue {
+    class Cliente {
+        - cedula: String
+        - nombre: String
+        + realizarPedido(servicios: List<Servicio>): Pedido
+    }
+
+    class Pedido {
+        - cliente: Cliente
+        - servicios: List<Servicio>
+        + calcularTotal(): double
+        + agregarServicio(servicio: Servicio): void
+    }
+
+    abstract class Servicio {
+        - numero: int
+        + calcularCosto(): double
+    }
+
+    class Impresion extends Servicio {
+        - color: String
+        - imagenes: List<Imagen>
+        + agregarImagen(imagen: Imagen): void
+    }
+
+    class Fotografia extends Servicio {
+        - tipoFotografia: String
+        - cantidadFotos: int
+    }
+
+    class Imagen {
+        - fichero: String
+        + print(): void
+    }
+}
+
+package "Factory" #LightGreen {
+    abstract class ServicioFactory {
+        + crearServicio(): Servicio
+    }
+
+    class ImpresionFactory extends ServicioFactory {
+        + crearServicio(): Servicio
+    }
+
+    class FotografiaFactory extends ServicioFactory {
+        + crearServicio(): Servicio
+    }
+}
+
+package "Strategy" #LightYellow {
+    interface CostoStrategy {
+        + calcularCosto(): double
+    }
+
+    class CostoImpresionStrategy implements CostoStrategy {
+        + calcularCosto(): double
+    }
+
+    class CostoFotografiaStrategy implements CostoStrategy {
+        + calcularCosto(): double
+    }
+}
+
+package "Decorator" #LightPink {
+    abstract class ServicioDecorator extends Servicio {
+        - servicio: Servicio
+        + calcularCosto(): double
+    }
+
+    class DescuentoDecorator extends ServicioDecorator {
+        - descuento: double
+        + calcularCosto(): double
+    }
+
+    class CostoExtraDecorator extends ServicioDecorator {
+        - costoExtra: double
+        + calcularCosto(): double
+    }
+}
+
+Cliente "1" --> "1" Pedido
+Pedido "1" --> "*" Servicio
+Servicio <|-- Impresion
+Servicio <|-- Fotografia
+Impresion "1" --> "*" Imagen
+ServicioFactory <|-- ImpresionFactory
+ServicioFactory <|-- FotografiaFactory
+CostoStrategy <|.. CostoImpresionStrategy
+CostoStrategy <|.. CostoFotografiaStrategy
+ServicioDecorator <|-- DescuentoDecorator
+ServicioDecorator <|-- CostoExtraDecorator
+
+@enduml
