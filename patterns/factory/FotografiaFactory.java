@@ -1,11 +1,15 @@
 package patterns.factory;
 
 import models.Fotografia;
+import patterns.strategy.CostoFotografiaStrategy;
 
-// La clase FotografiaFactory es una fábrica que crea servicios de tipo Fotografia
+// Fábrica concreta para crear servicios de fotografía
 public class FotografiaFactory {
-    // Método que crea y devuelve un nuevo servicio de tipo Fotografia
     public Fotografia crearFotografia() {
-        return new Fotografia(); // Retornamos una nueva instancia de Fotografia
+        // Crear el servicio de fotografía
+        Fotografia fotografia = new Fotografia();
+        // Configurar la estrategia de cálculo de costos
+        fotografia.setCostoStrategy(new CostoFotografiaStrategy());
+        return fotografia;
     }
 }
