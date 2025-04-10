@@ -1,109 +1,112 @@
 @startuml UML
 
-' Paquete principal
-package "models" {
-    abstract class Servicio {
-        - int numero
-        + abstract double calcularCosto()
-    }
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
 
-    class Impresion extends Servicio {
-        - String color
-        - List<Imagen> imagenes
-        - CostoStrategy costoStrategy
-        + void agregarImagen(Imagen imagen)
-        + double calcularCosto()
-        + void setColor(String color)
-        + String getColor()
-        + void setCostoStrategy(CostoStrategy costoStrategy)
-    }
-
-    class Fotografia extends Servicio {
-        - String tipoFotografia
-        - int cantidadFotos
-        - CostoStrategy costoStrategy
-        + double calcularCosto()
-        + void setTipoFotografia(String tipoFotografia)
-        + String getTipoFotografia()
-        + void setCostoStrategy(CostoStrategy costoStrategy)
-    }
-
-    class Pedido {
-        - Cliente cliente
-        - List<Servicio> servicios
-        + void agregarServicio(Servicio servicio)
-        + double calcularTotal()
-        + List<Servicio> getServicios()
-    }
-
-    class Cliente {
-        - String cedula
-        - String nombre
-        + String getCedula()
-        + String getNombre()
-    }
-
-    class Imagen {
-        - String nombre
-        + String getNombre()
-    }
+' Interfaz ServicioFactory (Patrón Factory Method)
+interface ServicioFactory {
+    + Servicio crearServicio()
 }
 
-' Paquete de patrones de diseño
-package "patterns.strategy" {
-    interface CostoStrategy {
-        + double calcularCosto()
-    }
-
-    class CostoImpresionStrategy implements CostoStrategy {
-        + double calcularCosto()
-    }
-
-    class CostoFotografiaStrategy implements CostoStrategy {
-        + double calcularCosto()
-    }
+' Fábricas concretas que implementan ServicioFactory
+class ImpresionFactory {
+    + Impresion crearServicio()
 }
 
-package "patterns.factory" {
-    abstract class ServicioFactory {
-        + abstract Servicio crearServicio()
-    }
-
-    class ImpresionFactory extends ServicioFactory {
-        + Impresion crearImpresion()
-    }
-
-    class FotografiaFactory extends ServicioFactory {
-        + Fotografia crearFotografia()
-    }
+class FotografiaFactory {
+    + Fotografia crearServicio()
 }
 
-package "patterns.facade" {
-    class ServicioFacade {
-        - Pedido pedido
-        - ServicioFactory impresionFactory
-        - ServicioFactory fotografiaFactory
-        + ServicioFacade(Cliente cliente, ServicioFactory impresionFactory, ServicioFactory fotografiaFactory)
-        + void agregarImpresion(String color, String... imagenes)
-        + void agregarFotografia(String tipoFotografia, int cantidadFotos)
-        + double calcularCostoTotal()
-        + Pedido getPedido()
-    }
+' Interfaz CostoStrategy (Patrón Strategy)
+interface CostoStrategy {
+    + double calcularCosto()
+}
+
+' Estrategias concretas que implementan CostoStrategy
+class CostoImpresionStrategy {
+    + double calcularCosto()
+}
+
+class CostoFotografiaStrategy {
+    + double calcularCosto()
+}
+
+' Clase abstracta Servicio
+abstract class Servicio {
+    - int numero
+    + abstract double calcularCosto()
+}
+
+' Clases concretas que heredan de Servicio
+class Impresion {
+    - String color
+    - List<Imagen> imagenes
+    - CostoStrategy costoStrategy
+    + void agregarImagen(Imagen imagen)
+    + double calcularCosto()
+    + void setColor(String color)
+    + String getColor()
+    + void setCostoStrategy(CostoStrategy costoStrategy)
+}
+
+class Fotografia {
+    - String tipoFotografia
+    - int cantidadFotos
+    - CostoStrategy costoStrategy
+    + double calcularCosto()
+    + void setTipoFotografia(String tipoFotografia)
+    + String getTipoFotografia()
+    + void setCostoStrategy(CostoStrategy costoStrategy)
+}
+
+' Clase Pedido (Gestión de servicios)
+class Pedido {
+    - Cliente cliente
+    - List<Servicio> servicios
+    + void agregarServicio(Servicio servicio)
+    + double calcularTotal()
+    + List<Servicio> getServicios()
+}
+
+' Clase Cliente (Entidad básica)
+class Cliente {
+    - String cedula
+    - String nombre
+    + String getCedula()
+    + String getNombre()
+}
+
+' Clase Imagen (Entidad básica)
+class Imagen {
+    - String nombre
+    + String getNombre()
+}
+
+' Clase ServicioFacade (Patrón Facade)
+class ServicioFacade {
+    - Pedido pedido
+    - ServicioFactory impresionFactory
+    - ServicioFactory fotografiaFactory
+    + ServicioFacade(Cliente cliente, ServicioFactory impresionFactory, ServicioFactory fotografiaFactory)
+    + void agregarImpresion(String color, String imagen1, String imagen2)
+    + void agregarFotografia(String tipoFotografia, int cantidadFotos)
+    + double calcularCostoTotal()
+    + Pedido getPedido()
 }
 
 ' Relaciones
-Servicio <|-- Impresion
-Servicio <|-- Fotografia
-Pedido *-- Cliente : composición
-Pedido *-- Servicio : composición
-Impresion *-- Imagen : composición
-Impresion --> CostoStrategy : dependencia
-Fotografia --> CostoStrategy : dependencia
+ServicioFactory <|.. ImpresionFactory
+ServicioFactory <|.. FotografiaFactory
 CostoStrategy <|.. CostoImpresionStrategy
 CostoStrategy <|.. CostoFotografiaStrategy
-ServicioFacade *-- Pedido : composición
-ServicioFacade --> ServicioFactory : dependencia
-ServicioFactory <|-- ImpresionFactory
-ServicioFactory <|-- FotografiaFactory
+Servicio <|-- Impresion
+Servicio <|-- Fotografia
+Pedido *-- Cliente
+Pedido *-- Servicio
+Impresion *-- Imagen
+Impresion --> CostoStrategy
+Fotografia --> CostoStrategy
+ServicioFacade *-- Pedido
+ServicioFacade --> ServicioFactory
 
 @enduml
