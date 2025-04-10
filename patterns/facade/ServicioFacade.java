@@ -2,27 +2,32 @@ package patterns.facade;
 
 import models.*;
 import patterns.factory.*;
+import java.util.List;
+import java.util.ArrayList;
 
 // La clase ServicioFacade simplifica la interacción con los servicios y pedidos
 public class ServicioFacade {
     private Pedido pedido; // Pedido actual
+    private ImpresionFactory impresionFactory; // Fábrica para servicios de impresión
+    private FotografiaFactory fotografiaFactory; // Fábrica para servicios de fotografía
 
-    // Constructor que inicializa el pedido para un cliente
-    public ServicioFacade(Cliente cliente) {
-        this.pedido = new Pedido(cliente, null); // Inicializamos el pedido con una lista vacía
+    // Constructor que inicializa el pedido para un cliente y recibe las fábricas
+    public ServicioFacade(Cliente cliente, ImpresionFactory impresionFactory, FotografiaFactory fotografiaFactory) {
+        List<Servicio> servicios = new ArrayList<>(); // Usamos la interfaz List
+        this.pedido = new Pedido(cliente, servicios); // Inicializamos el pedido con la lista
+        this.impresionFactory = impresionFactory;
+        this.fotografiaFactory = fotografiaFactory;
     }
 
     // Método para agregar un servicio de impresión al pedido
-    public void agregarImpresion(String color, String... imagenes) {
+    public void agregarImpresion(String color, String imagen1, String imagen2) {
         // Crear el servicio de impresión usando la fábrica
-        ImpresionFactory impresionFactory = new ImpresionFactory();
-        Impresion impresion = impresionFactory.crearImpresion();
+        Impresion impresion = impresionFactory.crearServicio();
         impresion.setColor(color);
 
         // Agregar las imágenes al servicio
-        for (String imagen : imagenes) {
-            impresion.agregarImagen(new Imagen(imagen));
-        }
+        impresion.agregarImagen(new Imagen(imagen1));
+        impresion.agregarImagen(new Imagen(imagen2));
 
         // Agregar el servicio al pedido
         pedido.agregarServicio(impresion);
@@ -31,8 +36,7 @@ public class ServicioFacade {
     // Método para agregar un servicio de fotografía al pedido
     public void agregarFotografia(String tipoFotografia, int cantidadFotos) {
         // Crear el servicio de fotografía usando la fábrica
-        FotografiaFactory fotografiaFactory = new FotografiaFactory();
-        Fotografia fotografia = fotografiaFactory.crearFotografia();
+        Fotografia fotografia = fotografiaFactory.crearServicio();
         fotografia.setTipoFotografia(tipoFotografia);
         fotografia.setCantidadFotos(cantidadFotos);
 

@@ -1,8 +1,6 @@
 package patterns.strategy;
 
-// La interfaz CostoStrategy define una estrategia para calcular el costo de un servicio
-// Las clases que implementen esta interfaz deben proporcionar su propia lógica para calcular el costo
+// Interfaz para estrategias de cálculo de costos
 public interface CostoStrategy {
-    // Método que calcula el costo del servicio
     double calcularCosto();
 }
